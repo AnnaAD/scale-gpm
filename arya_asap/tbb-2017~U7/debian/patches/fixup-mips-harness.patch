@@ -1,0 +1,16 @@
+Description: Use 1MB stack on 32-bit MIPS, fix out of memory error on thread creation
+Author: Steve Capper <steven.capper@gmail.com>
+
+Index: tbb/src/test/harness.h
+===================================================================
+--- tbb.orig/src/test/harness.h
++++ tbb/src/test/harness.h
+@@ -511,7 +511,7 @@ public:
+ // TODO: make a single definition of MByte used by all tests.
+         const size_t MByte = 1024*1024;
+ #if !defined(HARNESS_THREAD_STACK_SIZE)
+-#if __i386__||__i386||__arm__
++#if __i386__||__i386||__arm__||(_MIPS_ISA == _MIPS_ISA_MIPS32)
+         const size_t stack_size = 1*MByte;
+ #elif __x86_64__
+         const size_t stack_size = 2*MByte;

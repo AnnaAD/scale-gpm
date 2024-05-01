@@ -1,0 +1,49 @@
+Questions for framework:
+
+
+- parameters described 
+	- finish Arya, decomposition 
+
+- sample mine?
+	- is edge perforation done?
+
+- when is decoupling worth it?
+
+-how would an API be supported?
+ - generateSample
+
+- sampling width?
+
+- programming detail of generateSample combined with exact count.
+	- generate samples?
+
+- make a table to compare...
+	
+- decoupling or not generateSample/ExactCount is combined.
+
+- api for sampling algorithm.
+
+- probability that G' included a specific pattern.
+
+- overlap factor for sample mine??
+
+-ASAP only include common edge.
+	- only include neighbors of one of the vertices for closing edges also works.
+
+
+
+- how to define 
+
+
+- full variance calculation
+
+
+- tradeoff-
+
+- sampling width downside from overlap work -- n smaller 
+
+
+- not convinced -- Arya
+
+Theoretically-- when is ASAP better...
+	- variance limitation

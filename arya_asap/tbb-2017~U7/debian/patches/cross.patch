@@ -1,0 +1,33 @@
+From: Helmut Grohne <helmut@subdivi.de>
+Subject: have tbb honour $(CC) and $(CXX)
+
+Index: tbb-4.3~20150611/build/FreeBSD.gcc.inc
+===================================================================
+--- tbb-4.3~20150611.orig/build/FreeBSD.gcc.inc
++++ tbb-4.3~20150611/build/FreeBSD.gcc.inc
+@@ -28,8 +28,8 @@
+ DYLIB_KEY = -shared
+ WARNING_SUPPRESS = -Wno-parentheses
+ 
+-CPLUS = g++ 
+-CONLY = gcc
++CPLUS = $(CXX)
++CONLY = $(CC)
+ LIB_LINK_FLAGS = -shared
+ LIBS = -lpthread 
+ C_FLAGS = $(CPLUS_FLAGS)
+Index: tbb-4.3~20150611/build/linux.gcc.inc
+===================================================================
+--- tbb-4.3~20150611.orig/build/linux.gcc.inc
++++ tbb-4.3~20150611/build/linux.gcc.inc
+@@ -32,8 +32,8 @@
+ EXPORT_KEY = -Wl,--version-script,
+ LIBDL = -ldl
+ 
+-CPLUS = g++
+-CONLY = gcc
++CPLUS = $(CXX)
++CONLY = $(CC)
+ LIB_LINK_FLAGS = $(DYLIB_KEY) -Wl,-soname=$(BUILDING_LIBRARY)
+ LIBS += -lpthread -lrt
+ LINK_FLAGS = -Wl,-rpath-link=. -rdynamic
