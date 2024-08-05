@@ -10,6 +10,17 @@ Put the datasets in the `inputs` directory.
 - OpenMP, `sudo apt install libomp-dev`
 
 
+## Quick Experiments
+
+Because the complete experiment suite for the tables in the paper, takes up to 100 hours to complete, and certain runs may timeout at 10 hours, a light suite of experiments of the faster online mode can be run with:
+
+`source scripts/sansa.src`
+
+which runs ScaleGPM NS online mode for cliques, and larger patterns on livej, friendster, and twitter40.
+
+This should complete in under 1 hour, on a 48 core machine.
+
+
 ## Reproducing Tables
 
 Run the following scripts for a complete collection of table results:
@@ -22,7 +33,7 @@ Run the following scripts for a complete collection of table results:
 
 - `source tbl4a.sh` : produces motif counts seen in table 4a. Also runs the ELP for Arya. Each run may take up to ten hours.
 
-- `source tbl4b.sh` : produces larger pattern counts seen in table 4b. Also runs the ELP for Arya. Each run may take up to ten hours.
+- `source tbl4b.sh` : produces larger graph counts seen in table 4b. Also runs the ELP for Arya. Each run may take up to ten hours. Needs 1TB of memory.
 
 
 ### Running Arya ELP:
