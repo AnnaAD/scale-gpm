@@ -44,17 +44,17 @@ Run the following scripts for a complete collection of table results:
 - `USAGE: ./arya_asap/graph_counting/src/ELP/GraphCounting.out <graph file_in_binary_format> <pattern_file> <graph file_in_binary_format> 1 <threads> <number of paritions for sparsification> <error margin>`
 
 Example:
-`./arya_asap/graph_counting/src/ELP/GraphCounting.out /livej/graph arya_asap/graph_counting/patterns/triangle_triangle /data/xhchen/livej/graph 1 48 10 0.1`
+`./arya_asap/graph_counting/src/ELP/GraphCounting.out /livej/graph arya_asap/graph_counting/patterns/triangle_triangle inputs/livej/graph 1 48 10 0.1`
 
 
 ### Running Sansa Fast Profiler
 - `cd sansa/src/approx/fast-profiler`
 - `make`
 
-- `USAGE: ./sansa/bin/ns_fast_profiler /data/xhchen/livej/graph <base window = 10000> <k pattern size> <pattern_name> <base error = 0.5> <(delta) std_devs = 3> <DAG?> <0>`
+- `USAGE: ./sansa/bin/ns_fast_profiler inputs/livej/graph <base window = 10000> <k pattern size> <pattern_name> <base error = 0.5> <(delta) std_devs = 3> <DAG?> <0>`
 
 Example:
-`./sansa/bin/ns_fast_profiler /data/xhchen/livej/graph 10000 8 clique 0.5 3 1 0`
+`./sansa/bin/ns_fast_profiler inputs/livej/graph 10000 8 clique 0.5 3 1 0`
 
 #### Running Performance Model
 
@@ -84,7 +84,7 @@ Example:
 ### Running NS-Online
 - `cd sansa/src/approx/neighbor_sampling`
 - `make`
-- `USAGE: ./sansa/bin/ns_fast_profiler /data/xhchen/livej/graph <base window = 10000> <k pattern size> <pattern_name> <base error = 0.5> <(delta) std_devs = 3> <DAG?> <0>`
+- `USAGE: ./sansa/bin/ns_fast_profiler inputs/livej/graph <base window = 10000> <k pattern size> <pattern_name> <base error = 0.5> <(delta) std_devs = 3> <DAG?> <0>`
 
 Example:
 `./sansa/bin/ns_final friendster/graph 10000 5 clique 0.1 3 1 0` 
