@@ -4,91 +4,97 @@ To begin with, download the [datasets](https://www.dropbox.com/sh/i1jq1uwtkcd2qo
 The first 3 graphs (`Mico`, `Patent_citations`, `Youtube`) are vertex-labeled graphs which are used for FSM.
 Put the datasets in the `inputs` directory.
 
+# Pre-Requisites
+
+- gcc compiler
+- OpenMP, `sudo apt install libomp-dev`
+
+
 ## Reproducing Tables
+
+Run the following scripts for a complete collection of table results:
+
+- `source tbl2.sh` : produces clique counts seen in table 2. Also runs the ELP for Arya. Each run may take up to ten hours.
+
+- `source tbl3.sh` : produces larger pattern counts seen in table 3. Also runs the ELP for Arya. Each run may take up to ten hours.
+
+- `source tbl3.sh` : produces larger pattern counts seen in table 3. Also runs the ELP for Arya. Each run may take up to ten hours.
+
+- `source tbl4a.sh` : produces motif counts seen in table 4a. Also runs the ELP for Arya. Each run may take up to ten hours.
+
+- `source tbl4b.sh` : produces larger pattern counts seen in table 4b. Also runs the ELP for Arya. Each run may take up to ten hours.
+
 
 ### Running Arya ELP:
 
 - `cd /arya_asap/graph_counting/src/ELP/`
 - `make`
   - this should automatically include the `tbb` library included in the repository.
-- `./arya_asap/graph_counting/src/ELP/GraphCounting.out /livej/graph arya_asap/graph_counting/patterns/triangle_triangle /data/xhchen/livej/graph 1 48 10 0.1`
+- `USAGE: ./arya_asap/graph_counting/src/ELP/GraphCounting.out <graph file_in_binary_format> <pattern_file> <graph file_in_binary_format> 1 <threads> <number of paritions for sparsification> <error margin>`
+
+Example:
+`./arya_asap/graph_counting/src/ELP/GraphCounting.out /livej/graph arya_asap/graph_counting/patterns/triangle_triangle /data/xhchen/livej/graph 1 48 10 0.1`
+
 
 ### Running Sansa Fast Profiler
 - `cd sansa/src/approx/fast-profiler`
 - `make`
-- `./sansa/bin/ns_fast_profiler /data/xhchen/livej/graph 10000 8 clique 0.5 3 1 0`
-  - replace `8 clique` with desired pattern
-  - `USAGE: ./sansa/bin/ns_fast_profiler /data/xhchen/livej/graph <base window = 10000> <k pattern size> <pattern_name> <base error = 0.5> <(delta) std_devs = 3> <DAG?> <0>`
+
+- `USAGE: ./sansa/bin/ns_fast_profiler /data/xhchen/livej/graph <base window = 10000> <k pattern size> <pattern_name> <base error = 0.5> <(delta) std_devs = 3> <DAG?> <0>`
+
+Example:
+`./sansa/bin/ns_fast_profiler /data/xhchen/livej/graph 10000 8 clique 0.5 3 1 0`
+
+#### Running Performance Model
+
+After running the fast profiler, input the results into the performance model as follows:
+
+`cd performance_model`
+`pip install requirements.txt`
+`cd src`
+`USAGE: python main.py {ELP,perf,threshold} --graph GRAPH --pattern PATTERN --error ERROR --NS NS --C C`
+
+Example:
+`python main.py threshold --graph livej --pattern triangle --error .1 --NS 10000 --C 20`
+
+Result:
+`{'GS': 0.06406906397691069, 'NS': (7.098001249396004e-06, 2.1294003748188015e-05)}`
+
+Which indicates the bounds of `NS` and the predicted `GS` time.
 
 ### Running Arya
 - `cd /arya_asap/graph_counting/src/multi_thread_single_machine`
 - `make`
-- ./arya_asap/graph_counting/src/multi_thread_single_machine/GraphCounting.out uk2007/graph arya_asap/graph_counting/patterns/triangle 19567 48`
-  - replace pattern and NS
+- `USAGE: ./arya_asap/graph_counting/src/multi_thread_single_machine/GraphCounting.out <graph_in_binary_format> <pattern_file> <NS> <threads>`
+
+Example:
+`./arya_asap/graph_counting/src/multi_thread_single_machine/GraphCounting.out uk2007/graph arya_asap/graph_counting/patterns/triangle 19567 48`
 
 ### Running NS-Online
 - `cd sansa/src/approx/neighbor_sampling`
 - `make`
-- `./sansa/bin/ns_final friendster/graph 10000 5 clique 0.1 3 1 0` 
-  - replace `5 clique` with desired pattern and desired graph
-  - `USAGE: ./sansa/bin/ns_fast_profiler /data/xhchen/livej/graph <base window = 10000> <k pattern size> <pattern_name> <base error = 0.5> <(delta) std_devs = 3> <DAG?> <0>`
+- `USAGE: ./sansa/bin/ns_fast_profiler /data/xhchen/livej/graph <base window = 10000> <k pattern size> <pattern_name> <base error = 0.5> <(delta) std_devs = 3> <DAG?> <0>`
 
+Example:
+`./sansa/bin/ns_final friendster/graph 10000 5 clique 0.1 3 1 0` 
 
 ### Running GS
 - `cd sansa/src/approx/sansa`
 - `make`
-- `./sansa/bin/sansa_omp_base livej/graph triangle 20 1 1` 
-  - replace `triangle` with desired pattern and desired graph
-  - `USAGE: ./sansa/bin/sansa_omp_base livej/graph triangle <num_colors> <chunk_size_parallel> <DAG?>`
+- `USAGE: ./sansa/bin/sansa_omp_base livej/graph triangle <num_colors> <chunk_size_parallel> <DAG?>`
+
+Example:
+`./sansa/bin/sansa_omp_base livej/graph triangle 20 1 1` 
 
 ### Running Exact
 
+The exact count method is embedded in the GS engine. To test, run with number of colors = 1.
 - `cd sansa/src/approx/sansa`
 - `make`
-- `./sansa/bin/sansa_omp_base livej/graph triangle 1 1 1` 
-  - replace `triangle` with desired pattern and desired graph
-  - `USAGE: ./sansa/bin/sansa_omp_base livej/graph triangle 1 <chunk_size_parallel> <DAG?>`
+- `USAGE: ./sansa/bin/sansa_omp_base livej/graph triangle 1 <chunk_size_parallel> <DAG?>`
 
-## Reproducing Time Breakdown
-- run fast profiler and report time
-- run GS/NS mode, reports proportion of time spent in overhead vs. count
-
-## Reproducing Hit Rate
-- NS-online mode and Arya report hit rate.
-
-## Reproducing Scaling Cores Figure
-
-```
-export OMP_NUM_THREADS=1
-./sansa/bin/sansa_omp_base /data/xhchen/friendster/graph 8clique 2 1 1
-export OMP_NUM_THREADS=2
-./sansa/bin/sansa_omp_base /data/xhchen/friendster/graph 8clique 2 1 1
-export OMP_NUM_THREADS=4
-./sansa/bin/sansa_omp_base /data/xhchen/friendster/graph 8clique 2 1 1
-export OMP_NUM_THREADS=8
-./sansa/bin/sansa_omp_base /data/xhchen/friendster/graph 8clique 2 1 1
-export OMP_NUM_THREADS=16
-./sansa/bin/sansa_omp_base /data/xhchen/friendster/graph 8clique 2 1 1
-export OMP_NUM_THREADS=32
-./sansa/bin/sansa_omp_base /data/xhchen/friendster/graph 8clique 2 1 1
-export OMP_NUM_THREADS=48
-./sansa/bin/sansa_omp_base /data/xhchen/friendster/graph 8clique 2 1 1
+Example:
+`./sansa/bin/sansa_omp_base livej/graph triangle 1 1 1` 
 
 
-export OMP_NUM_THREADS=1
-./sansa/bin/ns_path /data/xhchen/livej/graph 5 11000000
-export OMP_NUM_THREADS=2
-./sansa/bin/ns_path /data/xhchen/livej/graph 5 11000000
-export OMP_NUM_THREADS=4
-./sansa/bin/ns_path /data/xhchen/livej/graph 5 11000000
-export OMP_NUM_THREADS=8
-./sansa/bin/ns_path /data/xhchen/livej/graph 5 11000000
-export OMP_NUM_THREADS=16
-./sansa/bin/ns_path /data/xhchen/livej/graph 5 11000000
-export OMP_NUM_THREADS=32
-./sansa/bin/ns_path /data/xhchen/livej/graph 5 11000000
-export OMP_NUM_THREADS=48
-./sansa/bin/ns_path /data/xhchen/livej/graph 5 11000000
-source testing-db/run-ns-pattern.sh
-```
 

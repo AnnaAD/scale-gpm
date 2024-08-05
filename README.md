@@ -2,6 +2,7 @@
 
 To run the ScaleGPM system, first build the program in `sansa/src/approx/NS` and `sansa/src/approx/GS` with `make`.
 
+
 Then, run either mode as follows:
 
 - GS:
